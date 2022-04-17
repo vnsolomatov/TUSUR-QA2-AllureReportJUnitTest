@@ -4,12 +4,17 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
  
-import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.qameta.allure.Attachment;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
  
 @TestInstance(Lifecycle.PER_CLASS)
 public class NewTest {
@@ -24,7 +29,6 @@ public class NewTest {
         driver = new ChromeDriver();
         System.out.println("Executing on Chrome");
          
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             driver.navigate().to(baseURL);
             driver.manage().window().maximize();
     }
@@ -79,9 +83,16 @@ public class NewTest {
         Assert.assertEquals("6",result);
          
     }
- 
     @AfterAll
     public void tearDown() {
          driver.quit();
+    }
+    @AfterEach
+    public void takeScreenTest() {
+        makeScreenshot();
+    }
+    @Attachment(value="Attachment Screenshot", type="image/png" )
+    public byte[] makeScreenshot() {
+    	return ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
     }
 }
